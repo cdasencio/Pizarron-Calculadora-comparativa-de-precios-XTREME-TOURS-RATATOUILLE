@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pizarrón y comparador de precios</title>
+  <style>
+    :root{
+      --bg:#111;
+      --panel:#181818;
+      --panel-soft:#151515;
+      --line:#2f2f2f;
+      --text:#f5f5f5;
+      --muted:#b6b6b6;
+      --yellow:#ffd000;
+      --green:#5dff67;
+      --input:#202020;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial, Helvetica, sans-serif;
+      display:flex;
+      justify-content:center;
+      padding:32px 12px;
+    }
+
+    .page{
+      width:min(1080px,100%);
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
+    }
+
+    .card + .card{
+      margin-top:24px;
+    }
+
+    .section-title{
+      margin:0;
+      padding:24px 30px 12px;
+      font-size:clamp(1.5rem,4vw,2.35rem);
+      border-bottom:none;
+    }
+
+    .subtitle{
+      margin:0;
+      padding:0 30px 26px;
+      color:var(--muted);
+      background:var(--panel);
+      line-height:1.6;
+      border-bottom:1px solid var(--line);
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      min-width:760px;
+      border-collapse:collapse;
+    }
+
+    th,td{
+      padding:20px 24px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      vertical-align:middle;
+    }
+
+    th{
+      font-size:.95rem;
+      color:#f1f1f1;
+      background:var(--panel-soft);
+    }
+
+    td:first-child{
+      font-weight:800;
+      font-size:1.05rem;
+    }
+
+    .static-price{
+      color:var(--yellow);
+      font-weight:900;
+      font-size:1.06rem;
+      white-space:nowrap;
+    }
+
+    .static-difference{
+      color:var(--green);
+      font-weight:900;
+      font-size:1.08rem;
+      white-space:nowrap;
+    }
+
+    .price-box{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:var(--input);
+      border:1px solid #3a3a3a;
+      border-radius:7px;
+      padding:0 12px;
+      min-width:145px;
+    }
+
+    .price-box span{
+      color:#ccc;
+      font-weight:700;
+    }
+
+    input{
+      width:100%;
+      background:transparent;
+      color:white;
+      border:0;
+      outline:none;
+      font-size:1rem;
+      padding:13px 0;
+      appearance:textfield;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button{
+      -webkit-appearance:none;
+      margin:0;
+    }
+
+    .difference{
+      font-size:1.15rem;
+      font-weight:900;
+      color:var(--green);
+      white-space:nowrap;
+    }
+
+    .difference.negative{color:#ff6b6b}
+    .difference.zero{color:#d2d2d2}
+
+    .note{
+      margin:0;
+      padding:22px 28px 26px;
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.5;
+    }
+
+    @media(max-width:600px){
+      body{padding:12px 6px}
+      .section-title{padding:20px;font-size:1.4rem}
+      .subtitle{padding:0 20px 22px;line-height:1.6}
+      th,td{padding:15px 14px}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+
+    <section class="card">
+      <h1 class="section-title">Pizarrón de precios definitivos</h1>
+      <p class="subtitle">Precios establecidos para Tour Laguna Verde y Tour Ausoles.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Vehículo</th>
+              <th>Precio Ratatouille</th>
+              <th>Precio Sitio web / Website</th>
+              <th>Diferencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cuatrimoto sencilla</td>
+              <td class="static-price">$30.00</td>
+              <td class="static-price">$45.00</td>
+              <td class="static-difference">+$15.00</td>
+            </tr>
+            <tr>
+              <td>Cuatrimoto doble</td>
+              <td class="static-price">$40.00</td>
+              <td class="static-price">$65.00</td>
+              <td class="static-difference">+$25.00</td>
+            </tr>
+            <tr>
+              <td>Buggy 1 persona</td>
+              <td class="static-price">$50.00</td>
+              <td class="static-price">$75.00</td>
+              <td class="static-difference">+$25.00</td>
+            </tr>
+            <tr>
+              <td>Buggy 2 personas</td>
+              <td class="static-price">$55.00</td>
+              <td class="static-price">$80.00</td>
+              <td class="static-difference">+$25.00</td>
+            </tr>
+            <tr>
+              <td>Buggy 3 personas</td>
+              <td class="static-price">$60.00</td>
+              <td class="static-price">$85.00</td>
+              <td class="static-difference">+$25.00</td>
+            </tr>
+            <tr>
+              <td>Buggy 4 personas</td>
+              <td class="static-price">$65.00</td>
+              <td class="static-price">$90.00</td>
+              <td class="static-difference">+$25.00</td>
+            </tr>
+            <tr>
+              <td>UTV/Buggy 5 personas</td>
+              <td class="static-price">$75.00</td>
+              <td class="static-price">$95.00</td>
+              <td class="static-difference">+$20.00</td>
+            </tr>
+            <tr>
+              <td>Tour Ausoles (cuadri o buggy)</td>
+              <td class="static-price">$100.00</td>
+              <td class="static-price">$129.99</td>
+              <td class="static-difference">+$29.99</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">Comparador de precios</h2>
+      <p class="subtitle">Escribe los dos precios y la diferencia se calculará automáticamente.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Vehículo</th>
+              <th>Precio Ratatouille</th>
+              <th>Precio Sitio web / Website</th>
+              <th>Diferencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cuatrimoto sencilla</td>
+              <td><div class="price-box"><span>$</span><input class="rat" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td><div class="price-box"><span>$</span><input class="web" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td class="difference">$0.00</td>
+            </tr>
+            <tr>
+              <td>Cuatrimoto doble</td>
+              <td><div class="price-box"><span>$</span><input class="rat" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td><div class="price-box"><span>$</span><input class="web" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td class="difference">$0.00</td>
+            </tr>
+            <tr>
+              <td>Buggy 1 persona</td>
+              <td><div class="price-box"><span>$</span><input class="rat" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td><div class="price-box"><span>$</span><input class="web" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td class="difference">$0.00</td>
+            </tr>
+            <tr>
+              <td>Buggy 2 personas</td>
+              <td><div class="price-box"><span>$</span><input class="rat" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td><div class="price-box"><span>$</span><input class="web" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td class="difference">$0.00</td>
+            </tr>
+            <tr>
+              <td>Buggy 3 personas</td>
+              <td><div class="price-box"><span>$</span><input class="rat" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td><div class="price-box"><span>$</span><input class="web" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td class="difference">$0.00</td>
+            </tr>
+            <tr>
+              <td>Buggy 4 personas</td>
+              <td><div class="price-box"><span>$</span><input class="rat" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td><div class="price-box"><span>$</span><input class="web" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td class="difference">$0.00</td>
+            </tr>
+            <tr>
+              <td>UTV/Buggy 5 personas</td>
+              <td><div class="price-box"><span>$</span><input class="rat" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td><div class="price-box"><span>$</span><input class="web" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td class="difference">$0.00</td>
+            </tr>
+            <tr>
+              <td>Tour Ausoles (cuadri o buggy)</td>
+              <td><div class="price-box"><span>$</span><input class="rat" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td><div class="price-box"><span>$</span><input class="web" type="number" min="0" step="0.01" placeholder="0.00"></div></td>
+              <td class="difference">$0.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="note">
+        El pizarrón superior usa precios definitivos revisados. Los campos del comparador inferior son editables y calculan la diferencia automáticamente.
+      </p>
+    </section>
+
+  </main>
+
+  <script>
+    function formatMoney(value){
+      return new Intl.NumberFormat("en-US",{
+        style:"currency",
+        currency:"USD",
+        minimumFractionDigits:2
+      }).format(Math.abs(value));
+    }
+
+    function updateRow(row){
+      const ratValue = row.querySelector(".rat").value;
+      const webValue = row.querySelector(".web").value;
+      const rat = parseFloat(ratValue) || 0;
+      const web = parseFloat(webValue) || 0;
+      const diff = web - rat;
+      const cell = row.querySelector(".difference");
+
+      cell.classList.remove("negative","zero");
+
+      if(!ratValue && !webValue){
+        cell.textContent = "$0.00";
+        cell.classList.add("zero");
+      }else if(diff > 0){
+        cell.textContent = "+" + formatMoney(diff);
+      }else if(diff < 0){
+        cell.textContent = "-" + formatMoney(diff);
+        cell.classList.add("negative");
+      }else{
+        cell.textContent = formatMoney(0);
+        cell.classList.add("zero");
+      }
+    }
+
+    document.querySelectorAll(".card:nth-of-type(2) tbody tr").forEach(row=>{
+      row.querySelectorAll("input").forEach(input=>{
+        input.addEventListener("input",()=>updateRow(row));
+      });
+    });
+  </script>
+</body>
+</html>
